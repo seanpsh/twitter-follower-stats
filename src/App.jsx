@@ -2,7 +2,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import React, { useEffect, useState } from "react";
-import { API } from 'aws-amplify';
+import { get } from 'aws-amplify/api';
 
 function App() {
   const [users, setUsers] = useState([]); // State to store user data
@@ -14,13 +14,19 @@ function App() {
     setLoading(true); // Set loading to true before fetching
     setError(null); // Clear any previous errors
     try {
-      const apiName = "twitter-follower-stats-API-API"; // Replace with your actual API name configured in Amplify
-      const path = "/default"; // Adjust path as needed
-      const init = {
-        headers: {}, // IAM Auth is handled automatically by Amplify
-      };
+      const restOperation = get({ 
+        apiName: 'twitter-follower-stats-API-API',
+        path: '/default' 
+      });
+      const data = await restOperation.response;
 
-      const data = await API.get(apiName, path, init);
+      // const apiName = "twitter-follower-stats-API-API"; // Replace with your actual API name configured in Amplify
+      // const path = "/default"; // Adjust path as needed
+      // const init = {
+      //   headers: {}, // IAM Auth is handled automatically by Amplify
+      // };
+
+      // const data = await API.get(apiName, path, init);
       setUsers(data); // Update state with fetched data
     } catch (error) {
       setError(error.message); // Set error state if there's an error
